@@ -6,25 +6,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Applicazione ASP.NET</title>
 	<link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: dodgerblue !important; 
+            color: white !important; 
+        }
+    </style>
 	
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark text-bg-primary">
         <div class="container">
             <img src="~/Images/stemma.jpg" width="30" class="mx-2" />
-            @Html.ActionLink("POLIZIA MUNICIPALE", "Index", "Home", new { area = "" }, new { @class = "navbar-brand active" })
+            <a class="navbar-brand active" asp-area="" asp-controller="Home" asp-action="Index">POLIZIA MUNICIPALE</a>
+
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Attiva/Disattiva spostamento" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Aggiungi Trasgressore", "Create", "Trasgressore", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Aggiungi Violazione", "Create", "Violazione", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Aggiungi Verbale", "Create", "Verbale", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+
+
+                    <!-- Trasgressore Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="trasgressoreDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Trasgressori
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="trasgressoreDropdown">
+                            <a class="dropdown-item" asp-area="" asp-controller="Trasgressore" asp-action="Create">Aggiungi Trasgressore</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Trasgressore" asp-action="List">Lista</a>
+                        </div>
+                    </li>
+
+
+                    <!-- Violazione Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="violazioneDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Violazioni
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="violazioneDropdown">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Violazione" asp-action="Create">Aggiungi Violazione</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Violazione" asp-action="List">Lista</a></li>
+                        </ul>
+                    </li>
+
+
+                    <!-- Verbale Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="verbaleDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Verbali
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="verbaleDropdown">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Verbale" asp-action="Create">Aggiungi Verbale</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Verbale" asp-action="List">Lista</a></li>
+                        </ul>
+                    </li>
+
                 </ul>
             </div>
+
         </div>
     </nav>
     <div class="container body-content my-5">
@@ -36,7 +80,6 @@
     </div>
 
 	<script src="~/bootstrap/js/bootstrap.bundle.js"></script>
-	<script src="~/bootstrap/js/bootstrap.bundle.min.js"></script>
 	
 </body>
 </html>

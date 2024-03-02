@@ -20,6 +20,11 @@ namespace PoliziaMunicipale.Controllers
             ViewBag.AllViolazioni = DB.getAllViolazioni(_configuration); 
             return View();
         }
+        public ActionResult List()
+        {
+            ViewBag.AllViolazioni = DB.getAllViolazioni(_configuration);
+            return View();
+        }
 
         [HttpPost]
         public ActionResult Create(Violazione v)
@@ -27,7 +32,7 @@ namespace PoliziaMunicipale.Controllers
             if (ModelState.IsValid)
             {
                 DB.AggiungiViolazione(_configuration, v.Description); 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Violazione");
             }
             else
             {
@@ -48,7 +53,7 @@ namespace PoliziaMunicipale.Controllers
             if (ModelState.IsValid)
             {
                 DB.UpdateViolazione(_configuration, v.Id, v.Description); 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Violazione");
             }
             else return View(v);
         }
@@ -56,7 +61,7 @@ namespace PoliziaMunicipale.Controllers
         public ActionResult Delete(int id)
         {
             DB.RemoveViolazione(_configuration, id); 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("List", "Violazione");
         }
     }
 }

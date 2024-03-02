@@ -21,13 +21,19 @@ namespace PoliziaMunicipale.Controllers
             return View();
         }
 
+        public ActionResult List()
+        {
+            ViewBag.AllTrasgressori = DB.getAllTrasgressori(_configuration);
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Create(Trasgressore t)
         {
             if (ModelState.IsValid)
             {
                 DB.AggiungiTrasgressore(_configuration, t.Surname, t.Name, t.Address, t.City, t.CAP, t.CF);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Trasgressore");
             }
             else
             {
@@ -48,7 +54,7 @@ namespace PoliziaMunicipale.Controllers
             if (ModelState.IsValid)
             {
                 DB.UpdateTrasgressore(_configuration, t.Id, t.Surname, t.Name, t.Address, t.City, t.CAP, t.CF);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Trasgressore");
             }
             else return View(t);
         }
@@ -56,7 +62,7 @@ namespace PoliziaMunicipale.Controllers
         public ActionResult Delete(int id)
         {
             DB.RemoveTrasgressore(_configuration, id);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("List", "Trasgressore");
         }
     }
 }

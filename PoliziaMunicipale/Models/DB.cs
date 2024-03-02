@@ -161,7 +161,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // Rilancia l'eccezione o gestiscila come necessario
+                    throw; 
                 }
                 finally
                 {
@@ -198,7 +198,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Considera di gestire l'eccezione o di registrare un log
-                    throw; // Oppure gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -236,7 +236,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione eccezioni o logging
-                    throw; // o gestisci come necessario
+                    throw; 
                 }
                 finally
                 {
@@ -276,7 +276,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Considera di gestire l'eccezione o di registrare un log
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -318,7 +318,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -359,7 +359,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -386,7 +386,7 @@ namespace PoliziaMunicipale.Models
                     conn.Open();
                     using (SqlDataReader sqlDataReader = cmd.ExecuteReader())
                     {
-                        if (sqlDataReader.Read()) // Usa if invece di while se ti aspetti un solo risultato
+                        if (sqlDataReader.Read()) 
                         {
                             t = new Trasgressore
                             {
@@ -404,7 +404,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -431,7 +431,7 @@ namespace PoliziaMunicipale.Models
                     conn.Open();
                     using (SqlDataReader sqlDataReader = cmd.ExecuteReader())
                     {
-                        if (sqlDataReader.Read()) // Usa if invece di while se ti aspetti un solo risultato
+                        if (sqlDataReader.Read()) 
                         {
                             v = new Violazione
                             {
@@ -444,7 +444,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -470,7 +470,7 @@ namespace PoliziaMunicipale.Models
                     conn.Open();
                     using (SqlDataReader sqlDataReader = cmd.ExecuteReader())
                     {
-                        if (sqlDataReader.Read()) // Usa if invece di while se ti aspetti un solo risultato
+                        if (sqlDataReader.Read()) 
                         {
                             v = new Verbale
                             {
@@ -490,7 +490,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Gestione delle eccezioni o logging
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -526,7 +526,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Considera di gestire l'eccezione o di registrare un log
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
             }
         }
@@ -563,8 +563,8 @@ namespace PoliziaMunicipale.Models
                 {
                     // In caso di errore, annulla tutte le modifiche
                     transaction.Rollback();
-                    // Considera di gestire l'eccezione o di registrare un log
-                    throw; // o gestisci l'errore in modo appropriato
+                    
+                    throw; 
                 }
                 finally
                 {
@@ -593,7 +593,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     // Considera di gestire l'eccezione o di registrare un log
-                    throw; // o gestisci l'errore in modo appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -636,7 +636,7 @@ namespace PoliziaMunicipale.Models
                 {
                     // In caso di errore, esegue il rollback della transazione
                     transaction.Rollback();
-                    throw; // Gestisci l'eccezione o registra un log come appropriato
+                    throw; 
                 }
                 finally
                 {
@@ -734,7 +734,7 @@ namespace PoliziaMunicipale.Models
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    // Considera di registrare l'eccezione
+                    
                     throw;
                 }
             }

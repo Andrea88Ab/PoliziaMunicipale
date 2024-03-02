@@ -23,13 +23,21 @@ namespace PoliziaMunicipale.Controllers
             return View();
         }
 
+        public ActionResult List()
+        {
+            ViewBag.ListaTrasgressori = new SelectList(DB.getAllTrasgressori(_configuration), "Id", "FullName");
+            ViewBag.ListaViolazioni = new SelectList(DB.getAllViolazioni(_configuration), "Id", "Description");
+            ViewBag.ListaVerbali = DB.getAllVerbali(_configuration);
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Create(Verbale verbale)
         {
             if (ModelState.IsValid)
             {
                 DB.AggiungiVerbale(_configuration, verbale.DataViolazione, verbale.IndirizzoViolazione, verbale.Agente, verbale.DataVerbale, verbale.Importo, verbale.PuntiTolti, verbale.IdTrasgressore, verbale.IdViolazione);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Verbale");
             }
             else
             {
@@ -54,7 +62,7 @@ namespace PoliziaMunicipale.Controllers
             if (ModelState.IsValid)
             {
                 DB.UpdateVerbale(_configuration, verbale.Id, verbale.DataViolazione, verbale.IndirizzoViolazione, verbale.Agente, verbale.DataVerbale, verbale.Importo, verbale.PuntiTolti, verbale.IdTrasgressore, verbale.IdViolazione);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Verbale");
             }
             else return View(verbale);
         }
@@ -63,7 +71,7 @@ namespace PoliziaMunicipale.Controllers
         {
             DB.RemoveVerbale(_configuration, id);
             DB.DeleteAnagraficaAndRelatedVerbale(_configuration, id);
-            return RedirectToAction("Create", "Verbale");
+            return RedirectToAction("List", "Verbale");
         }
     }
 }

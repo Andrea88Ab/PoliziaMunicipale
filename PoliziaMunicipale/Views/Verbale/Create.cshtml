@@ -2,104 +2,73 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Aggiungi Verbale";
+    ViewData["Title"] = "Aggiungi Verbale";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center">@ViewData["Title"]</h2>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            @using (Html.BeginForm("Create", "Verbale", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+            <form asp-action="Create" asp-controller="Verbale" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DataViolazione)
-                    @Html.EditorFor(model => model.DataViolazione, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                    @Html.ValidationMessageFor(model => model.DataViolazione)
+                    <label asp-for="DataViolazione"></label>
+                    <input asp-for="DataViolazione" class="form-control" type="date" />
+                    <span asp-validation-for="DataViolazione" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IndirizzoViolazione)
-                    @Html.EditorFor(model => model.IndirizzoViolazione, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.IndirizzoViolazione)
+                    <label asp-for="IndirizzoViolazione"></label>
+                    <input asp-for="IndirizzoViolazione" class="form-control" />
+                    <span asp-validation-for="IndirizzoViolazione" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Agente)
-                    @Html.EditorFor(model => model.Agente, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Agente)
+                    <label asp-for="Agente"></label>
+                    <input asp-for="Agente" class="form-control" />
+                    <span asp-validation-for="Agente" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DataVerbale)
-                    @Html.EditorFor(model => model.DataVerbale, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-                    @Html.ValidationMessageFor(model => model.DataVerbale)
+                    <label asp-for="DataVerbale"></label>
+                    <input asp-for="DataVerbale" class="form-control" type="date" />
+                    <span asp-validation-for="DataVerbale" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Importo)
-                    @Html.EditorFor(model => model.Importo, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Importo)
+                    <label asp-for="Importo"></label>
+                    <input asp-for="Importo" class="form-control" />
+                    <span asp-validation-for="Importo" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.PuntiTolti)
-                    @Html.EditorFor(model => model.PuntiTolti, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.PuntiTolti)
+                    <label asp-for="PuntiTolti"></label>
+                    <input asp-for="PuntiTolti" class="form-control" />
+                    <span asp-validation-for="PuntiTolti" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IdTrasgressore)
-                    @Html.DropDownListFor(model => model.IdTrasgressore, (SelectList)ViewBag.ListaTrasgressori, "Seleziona Trasgressore", new { @class = "form-control" }) 
-                    @Html.ValidationMessageFor(model => model.IdTrasgressore)
+                    <label asp-for="IdTrasgressore">Trasgressore</label>
+                    <select asp-for="IdTrasgressore" asp-items="@(new SelectList(ViewBag.ListaTrasgressori, "Value", "Text"))" class="form-control">
+                        <option value="">Seleziona Trasgressore</option>
+                    </select>
+                    <span asp-validation-for="IdTrasgressore" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.IdViolazione)
-                    @Html.DropDownListFor(model => model.IdViolazione, (SelectList)ViewBag.ListaViolazioni, "Seleziona Violazione", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.IdViolazione)
+                    <label asp-for="IdViolazione">Violazione</label>
+                    <select asp-for="IdViolazione" asp-items="@(new SelectList(ViewBag.ListaViolazioni, "Value", "Text"))" class="form-control">
+                        <option value="">Seleziona Violazione</option>
+                    </select>
+                    <span asp-validation-for="IdViolazione" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Crea</button>
                 </div>
-            }
+            </form>
         </div>
     </div>
-
-    <h4 class="text-center">Lista Verbali</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Data Violazione</th>
-                <th>Agente</th>
-                <th>Data Verbale</th>
-                <th>Importo</th>
-                <th>Punti Tolto</th>
-                <th>Trasgressore</th>
-                <th>Violazione</th>
-                <th>Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in (IEnumerable<PoliziaMunicipale.Models.Verbale>)ViewBag.ListaVerbali)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(_ => item.DataViolazione, "{0:dd/MM/yyyy}")</td>
-                    <td>@Html.DisplayFor(_ => item.Agente)</td>
-                    <td>@Html.DisplayFor(_ => item.DataVerbale, "{0:dd/MM/yyyy}")</td>
-                    <td>@Html.DisplayFor(_ => item.Importo)</td>
-                    <td>@Html.DisplayFor(_ => item.PuntiTolti)</td>
-                    <td>@Html.DisplayFor(_ => item.IdTrasgressore)</td> 
-                    <td>@Html.DisplayFor(_ => item.IdViolazione)</td> 
-                    <td>
-                        @Html.ActionLink("Modifica", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
-                        @Html.ActionLink("Elimina", "Remove", new { id = item.Id }, new { @class = "btn btn-danger", @onclick = "return confirm('Sei sicuro di voler eliminare questo verbale?');" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>

@@ -1,0 +1,42 @@
+﻿@model PoliziaMunicipale.Models.Verbale
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Aggiungi Verbale";
+}
+
+
+<h4 class="text-center">Lista Verbali</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data Violazione</th>
+            <th>Agente</th>
+            <th>Data Verbale</th>
+            <th>Importo</th>
+            <th>Punti Tolto</th>
+            <th>Trasgressore</th>
+            <th>Violazione</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in (IEnumerable<PoliziaMunicipale.Models.Verbale>)ViewBag.ListaVerbali)
+        {
+            <tr>
+                <td>@Html.DisplayFor(_ => item.DataViolazione, "{0:dd/MM/yyyy}")</td>
+                <td>@Html.DisplayFor(_ => item.Agente)</td>
+                <td>@Html.DisplayFor(_ => item.DataVerbale, "{0:dd/MM/yyyy}")</td>
+                <td>@Html.DisplayFor(_ => item.Importo)</td>
+                <td>@Html.DisplayFor(_ => item.PuntiTolti)</td>
+                <td>@Html.DisplayFor(_ => item.IdTrasgressore)</td>
+                <td>@Html.DisplayFor(_ => item.IdViolazione)</td>
+                <td>
+                    @Html.ActionLink("Modifica", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Elimina", "Remove", new { id = item.Id }, new { @class = "btn btn-danger", @onclick = "return confirm('Sei sicuro di voler eliminare questo verbale?');" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
