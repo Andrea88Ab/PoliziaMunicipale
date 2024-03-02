@@ -533,22 +533,36 @@ namespace PoliziaMunicipale.Models
 
         public static void RemoveTrasgressore(IConfiguration configuration, int id)
         {
-            // Utilizza IConfiguration per ottenere la stringa di connessione
             string connectionString = configuration.GetConnectionString("ConnectionStringDB");
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                conn.Open();
+                // Inizia una transazione per garantire che le operazioni siano atomiche
+                SqlTransaction transaction = conn.BeginTransaction();
+
                 try
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("DELETE FROM ANAGRAFICA WHERE idAnagrafica = @id", conn))
+                    // Prima elimina i record dipendenti in 'VERBALE' che fanno riferimento a questo trasgressore
+                    using (SqlCommand cmdDeleteVerbali = new SqlCommand("DELETE FROM VERBALE WHERE idAnagrafica = @id", conn, transaction))
                     {
-                        // Utilizzo di AddWithValue per semplicità, ma considera l'uso di Add per una maggiore precisione del tipo
-                        cmd.Parameters.AddWithValue("@id", id);
-                        cmd.ExecuteNonQuery();
+                        cmdDeleteVerbali.Parameters.AddWithValue("@id", id);
+                        cmdDeleteVerbali.ExecuteNonQuery();
                     }
+
+                    // Ora è possibile eliminare il record trasgressore in 'ANAGRAFICA'
+                    using (SqlCommand cmdDeleteAnagrafica = new SqlCommand("DELETE FROM ANAGRAFICA WHERE idAnagrafica = @id", conn, transaction))
+                    {
+                        cmdDeleteAnagrafica.Parameters.AddWithValue("@id", id);
+                        cmdDeleteAnagrafica.ExecuteNonQuery();
+                    }
+
+                    // Se tutto va a buon fine, conferma le modifiche
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {
+                    // In caso di errore, annulla tutte le modifiche
+                    transaction.Rollback();
                     // Considera di gestire l'eccezione o di registrare un log
                     throw; // o gestisci l'errore in modo appropriato
                 }
@@ -558,6 +572,7 @@ namespace PoliziaMunicipale.Models
                 }
             }
         }
+
         public static void UpdateViolazione(IConfiguration configuration, int id, string description)
         {
             // Utilizza IConfiguration per ottenere la stringa di connessione
@@ -588,25 +603,40 @@ namespace PoliziaMunicipale.Models
         }
         public static void RemoveViolazione(IConfiguration configuration, int id)
         {
-            // Utilizza IConfiguration per ottenere la stringa di connessione
             string connectionString = configuration.GetConnectionString("ConnectionStringDB");
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                conn.Open();
+
+                // Inizia una transazione per garantire l'integrità dei dati
+                SqlTransaction transaction = conn.BeginTransaction();
+
                 try
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("DELETE FROM TIPOVIOLAZIONE WHERE idViolazione = @id", conn))
+                    // Prima, elimina tutti i record verbali che fanno riferimento a questa violazione
+                    string deleteVerbaliSql = "DELETE FROM Verbale WHERE idViolazione = @id";
+                    using (SqlCommand cmdDeleteVerbali = new SqlCommand(deleteVerbaliSql, conn, transaction))
                     {
-                        // Uso di AddWithValue, considerare l'uso di Add per una maggiore precisione dei tipi
-                        cmd.Parameters.AddWithValue("@id", id);
-
-                        cmd.ExecuteNonQuery();
+                        cmdDeleteVerbali.Parameters.AddWithValue("@id", id);
+                        cmdDeleteVerbali.ExecuteNonQuery();
                     }
+
+                    // Poi, elimina la violazione stessa
+                    string deleteViolazioneSql = "DELETE FROM TIPOVIOLAZIONE WHERE idViolazione = @id";
+                    using (SqlCommand cmdDeleteViolazione = new SqlCommand(deleteViolazioneSql, conn, transaction))
+                    {
+                        cmdDeleteViolazione.Parameters.AddWithValue("@id", id);
+                        cmdDeleteViolazione.ExecuteNonQuery();
+                    }
+
+                    // Se tutto è andato a buon fine, committa la transazione
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {
-                    // Considera di gestire l'eccezione o di registrare un log
-                    throw; // o gestisci l'errore in modo appropriato
+                    // In caso di errore, esegue il rollback della transazione
+                    transaction.Rollback();
+                    throw; // Gestisci l'eccezione o registra un log come appropriato
                 }
                 finally
                 {
@@ -614,6 +644,7 @@ namespace PoliziaMunicipale.Models
                 }
             }
         }
+
 
         public static void UpdateVerbale(IConfiguration configuration, int id, DateTime dataV, string address, string agent, DateTime dataT, double amount, int points, int idT, int idV)
         {
@@ -641,15 +672,15 @@ namespace PoliziaMunicipale.Models
                 }
                 catch (Exception ex)
                 {
-                    // Considera di gestire l'eccezione o di registrare un log
-                    throw; // Oppure gestisci l'errore in modo appropriato
+                    
+                    throw; 
                 }
             }
         }
 
         public static void RemoveVerbale(IConfiguration configuration, int id)
         {
-            // Utilizza IConfiguration per ottenere la stringa di connessione
+            
             string connectionString = configuration.GetConnectionString("ConnectionStringDB");
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -658,7 +689,7 @@ namespace PoliziaMunicipale.Models
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("DELETE FROM VERBALE WHERE idVerbale = @id", conn))
                     {
-                        // Utilizzo di AddWithValue per semplicità, ma considera l'uso di Add per una maggiore precisione dei tipi
+                        
                         cmd.Parameters.AddWithValue("@id", id);
 
                         cmd.ExecuteNonQuery();
@@ -666,12 +697,45 @@ namespace PoliziaMunicipale.Models
                 }
                 catch (Exception ex)
                 {
-                    // Considera di gestire l'eccezione o di registrare un log
-                    throw; // Oppure gestisci l'errore in modo appropriato
+                    
+                    throw; 
                 }
                 finally
                 {
                     conn.Close();
+                }
+            }
+
+        }
+        public static void DeleteAnagraficaAndRelatedVerbale(IConfiguration configuration, int idAnagrafica)
+        {
+            string connectionString = configuration.GetConnectionString("ConnectionStringDB");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try
+                {
+                    using (SqlCommand cmdDeleteVerbale = new SqlCommand("DELETE FROM Verbale WHERE idAnagrafica = @IdAnagrafica", connection, transaction))
+                    {
+                        cmdDeleteVerbale.Parameters.AddWithValue("@IdAnagrafica", idAnagrafica);
+                        cmdDeleteVerbale.ExecuteNonQuery();
+                    }
+
+                    using (SqlCommand cmdDeleteAnagrafica = new SqlCommand("DELETE FROM Anagrafica WHERE idAnagrafica = @IdAnagrafica", connection, transaction))
+                    {
+                        cmdDeleteAnagrafica.Parameters.AddWithValue("@IdAnagrafica", idAnagrafica);
+                        cmdDeleteAnagrafica.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Considera di registrare l'eccezione
+                    throw;
                 }
             }
         }

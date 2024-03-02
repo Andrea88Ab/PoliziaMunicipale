@@ -62,7 +62,8 @@ namespace PoliziaMunicipale.Controllers
         public ActionResult Remove(int id)
         {
             DB.RemoveVerbale(_configuration, id);
-            return RedirectToAction("Index", "Home");
+            DB.DeleteAnagraficaAndRelatedVerbale(_configuration, id);
+            return RedirectToAction("Create", "Verbale");
         }
     }
 }
